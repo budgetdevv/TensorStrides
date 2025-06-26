@@ -15,19 +15,13 @@ namespace TensorStrides
 
             const int NUM_BATCHES = 100;
 
-            // Here, we emulate a larger dimension without allocating a larger array.
-            // var tensorSpan = new TensorSpan<int>(
-            //     arr,
-            //     lengths: [ NUM_BATCHES, arr.Length ],
-            //     strides: [ 0, 1 ]
-            // );
-
-            var tensorSpan = Tensor.Create<int>(
+            var tensor = Tensor.Create<int>(
                 arr,
                 lengths: [ 1, arrLength ]
             );
 
-            tensorSpan = tensorSpan.Expand([ NUM_BATCHES, arrLength ]);
+            // Here, we emulate a larger dimension without allocating a larger array.
+            tensor = tensor.Expand([ NUM_BATCHES, arrLength ]);
 
             var buffer = new int[arrLength];
 
@@ -35,7 +29,7 @@ namespace TensorStrides
 
             for (int i = 0; i < NUM_BATCHES; i++)
             {
-                var slice = tensorSpan[i..(i + 1), NRange.All];
+                var slice = tensor[i..(i + 1), NRange.All];
 
                 ((int) slice.FlattenedLength).Should().Be(arrLength);
 
